@@ -1,0 +1,73 @@
+/**
+ * Macro to make OpenCL kernel available on CUDA
+ */
+ #include <float.h>
+ #include<cutil_math.h>
+
+ #ifdef __CUDACC__
+
+	// basic keyword
+	#define	__kernel   extern "C" __global__
+//	#define	XXX        __device__
+	#define __constant __constant__
+//	#define __device   __global__
+	#define __local    __shared__
+	#define __global    
+	#define __private
+	// thread indexing, dimension and sizes
+	
+	/// XXX to complete for 2d and 3d
+	#define DIM_EXP(XXX)  .x
+
+//	#define get_num_groups(XXX)  (gridDim.##DIM_EXP(XXX))	
+//	#define get_local_size(XXX)  (blockDim.##DIM_EXP(XXX))	
+//	#define get_group_id(XXX)    (blockIdx.##DIM_EXP(XXX))	
+//	#define get_local_id(XXX)    (threadIdx.##DIM_EXP(XXX))	
+	
+	#define get_num_groups(XXX)  (gridDim.x)	
+	#define get_local_size(XXX)  (blockDim.x)	
+	#define get_group_id(XXX)    (blockIdx.x)
+	#define get_local_id(XXX)    (threadIdx.x)		
+	#define get_global_id(XXX)   (blockIdx.x*blockDim.x+threadIdx.x)						
+	#define get_global_size(XXX) (blockDim.x*gridDim.x)
+
+			
+/*
+	#define get_num_groups(0)  gridDim.x	
+	#define get_num_groups(1)  gridDim.y	
+	#define get_num_groups(2)  gridDim.z	
+	#define get_local_size(0)  blockDim.x
+	#define get_local_size(1)  blockDim.y
+	#define get_local_size(2)  blockDim.z
+	#define get_group_id(0)    blockIdx.x	
+	#define get_group_id(1)    blockIdx.y	
+	#define get_group_id(2)    blockIdx.z	
+	#define get_local_id(0)    threadIdx.x	
+	#define get_local_id(1)    threadIdx.y
+	#define get_local_id(2)    threadIdx.z
+*/
+
+
+	// synchronization 
+	#define barrier(XXX)                          __syncthreads()
+//	#define barrier(CLK_LOCAL_MEM_FENCE)                          __syncthreads()
+//	#define barrier(CLK_GLOBAL_MEM_FENCE)                         XXX
+//	#define XXX                                                   __threadfence()	
+//	#define mem_fence(CLK_GLOBAL_MEM_FENCE | CLK_LOCAL_MEM_FENCE) __threadfence_block()	
+//	#define read_mem_fence()                                      XXX
+//	#define write_mem_fence()                                     XXX
+
+	typedef unsigned int uint;
+	typedef unsigned char uchar;
+
+
+	#define MAXFLOAT FLT_MAX 
+	#define max(a, b) fmaxf(a, b)
+	#define min(a, b) fminf(a, b)
+	
+	#define atomic_inc(a) atomicAdd(a, 1u)
+	#define atomic_add(a, b) atomicAdd(a, b)
+	#define atomic_or(a, b) atomicOr(a, b)
+
+#define float3 float4
+#endif
